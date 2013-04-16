@@ -1,10 +1,12 @@
 import numpy as np
 
 class Node:
-    def __init__(self, question, left, right):
+    def __init__(self, question, left, right, left_points, right_points):
         self.question = question
         self.left = left
         self.right = right
+	self.left_points = left_points
+	self.right_points = right_points
 
     def get_question(self):
         return self.question
@@ -22,13 +24,6 @@ class Leaf:
     def get_collection(self):
         return self.collection
 
-    def vote(self):
-        p = (np.sum(self.collection.y)+0.0)/self.collection.points
-        if p > 0.5:
-            return (1, p)
-        else:
-            return (0, 1- p)
-
 class Question:
     def __init__(self, feature, value):
         self.feature = feature
@@ -39,3 +34,6 @@ class Question:
 
     def get_value(self):
         return self.value
+
+    def __repr__(self):
+	return 'Question: [%d] <= %f' % (self.feature, self.value)

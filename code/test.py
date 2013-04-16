@@ -2,19 +2,32 @@ from train import *
 from numpy import *
 from scipy.io import loadmat
 
-x = array([[1,5],[2,4],[3,3],[4,2]])
-y = array([[0],[0],[1],[1]])
-c = Collection(x, y)
 d = DecisionTree()
-d.train(c)
-
+r = RandomForest(parameters={
+    'trees' : 100,
+    'samples' : 100,
+    'depth' : 6
+})
 print("Loading data")
 data = loadmat('spamData.mat')
 print("Preprocessing")
-x = data['Xtrain'][:,1:2]
+x = data['Xtrain']
 y = data['ytrain']
+
 c = Collection(x, y)
-print("Training")
-d.train(c)
 
 test = data['Xtest']
+check = data['ytest']
+
+t = Collection(test, check)
+
+"""
+print("Training decision tree")
+d.train(c)
+
+print("Error rate: %f" % d.test(t))
+"""
+
+print("Training random forest")
+r.train(c)
+print("Error rate: %f" % r.test(t))
