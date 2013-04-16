@@ -13,7 +13,7 @@ class DecisionTree:
         self.trained = True
 
     def generate_tree(self, collection, depth=0):
-        if depth > 4 or collection.points == 0 or collection.homogeneous():
+        if collection.points == 0 or collection.homogeneous():
             node = Leaf(collection)
             return node
         print("Determining split at depth: %d" % depth)
