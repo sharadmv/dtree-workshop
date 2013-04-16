@@ -1,58 +1,62 @@
 source('questions.m');
 source('impurity.m');
-
-questions = cellstr([
-    "c.x(:, 1) > 0"
-  ; "c.x(:, 1) > 1"
-  ; "c.x(:, 1) > 2"
-  ; "c.x(:, 1) > 3"
-  ; "c.x(:, 1) > 4"
-]);
+source('tree.m');
 
 function[data] = preprocess_train(d)
-    data = struct("x", d.Xtrain, "y", d.ytrain);
+    data = struct("x", d.Xtrain(1:5:3000, 1), "y", d.ytrain(1:5:3000, :));
 endfunction
 
-function[tree] = train(d, questions)
+function[tree] = train(d)
     data = preprocess_train(d);
-    tree = decisiontree(data, splits);
+    tree = decisiontree(data, 0);
 endfunction
 
-function[tree] = decisiontree(node, questions)
+function[tree] = decisiontree(node, depth)
     numpoints = size(node.y)(1);
-    if numpoints > 5 && length(questions) > 0
-        [question, split] = decide(node, questions);
-        newquestions = copyquestions(questions);
-        newquestions(question, :) = [];
-        left = decisiontree(split.left, newquestions);
-        right = decisiontree(split.right , newquestions);
-        tree = make_node(questions{question}, left, right);
+    choices = sum(node.y);
+    printf('Depth: %d\n', depth);
+    if numpoints > 5 && choices != 0 && choices != numpoints && depth < 5
+        [question, s] = decide(node);
+        left = decisiontree(s.left, depth + 1);
+        right = decisiontree(s.right, depth + 1);
+        tree = make_node(@(c) split(c, question), left, right);
     else
         leaf = make_leaf(node);
         tree = leaf;
     endif
 endfunction
 
-function[index, split] = decide(node, questions)
-    inf = impurity(node);
+function[question, split] = decide(node)
+    imp = impurity(node);
+    num = size(node.x)(1);
+    features = size(node.x)(2);
     best = -1;
-    for i = 1:length(questions)
-        [s, gain] = choose(node, questions{i});
-        if gain > best
-            question = i;
-            split = s;
-            best = gain;
-        endif
+    for i = 1:features
+        printf('Sorting feature: %d\n', i);
+        [d, index] = sort(node.x(:, i));
+        data = node.x(index,:);
+        for j = 1:num
+            split_value = data(j, i);
+            q = strcat(['c.x(:, ', num2str(i),') >= ',num2str(split_value)]);
+            [s, gain] = choose(node, q);
+            s
+            if gain > best
+                best = gain;
+                split = s;
+                question = q;
+            endif
+        endfor
     endfor
-    index = question;
-    value = best;
+    best = -1;
 endfunction
 
 function[split, gain] = choose(node, question)
     num = size(node.x)(1);
-    split = question(node);
+    q = @(c) split(c, question);
+    split = q(node);
     inf = impurity(node);
-    p = size(split.left.x)(1)/num;
+    s = size(split.left.x);
+    p = (s(1))/num;
     gain = inf - p*impurity(split.left)-(1-p)*impurity(split.right);
 endfunction
 

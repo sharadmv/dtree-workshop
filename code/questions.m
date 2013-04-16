@@ -3,8 +3,12 @@ function[ret] = split(c, question)
     left = struct();
     right = struct();
     select = eval(question);
-    ret.left = struct("x", c.x(select, :), "y", c.y(select, :));
-    ret.right = struct("x", c.x(!select, :), "y", c.y(!select, :));
+    ret.left = struct("x", c.x(select, :));
+    ret.right = struct("x", c.x(!select, :));
+    if isfield(c, 'y') 
+        ret.left.y = c.y(select,:);
+        ret.right.y = c.y(select, :);
+    endif
 endfunction
 
 function[splits] = getsplits(questions)
