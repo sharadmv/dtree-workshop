@@ -1,4 +1,4 @@
-from train import *
+from classifier import *
 from numpy import *
 from scipy.io import loadmat
 
@@ -32,58 +32,39 @@ d = DecisionTree({
 })
 
 r = RandomForest(parameters={
-    'trees' : 100,
-    'samples' : 1000,
-    'depth' : 10,
-    'features' : 20 
+    'trees' : 200,
+    'samples' : 400,
+    'depth' : 30,
+    'features' : 5 
 })
 
 a = AdaBoost(parameters={
     'iterations' : 20,
-    'depth' : 0,
-    'num_features' : 6 
+    'depth' : 2,
 })
 
 print("Loading data")
 data = loadmat('spamData.mat')
-print("Preprocessing")
 x = data['Xtrain']
 y = data['ytrain']
-
 c = Collection(x, y)
 
-test = data['Xtest']
-check = data['ytest']
+xtest = data['Xtest']
+ytest = data['ytest']
 
-t = Collection(test, check)
+t = Collection(xtest, ytest)
 
-"""
-print("Training decision tree")
 trerr = []
 teerr = []
-for i in range(1, 2):
-    d = RandomForest({
-        'trees' : 200,
-        'samples' : 40,
-        'depth' : 3,
-        'features' : 5 
+for i in [1, 10, 50, 100]:
+    print("Training AdaBoost %d" % i)
+    a = AdaBoost(parameters={
+        'iterations' : i,
+        'depth' : 1,
     })
-    d.train(c)
-    training_error = d.test(c)
-    test_error = d.test(t)
+    a.train(c)
+    training_error = a.test(c)
+    test_error = a.test(t)
     trerr.append(training_error)
     teerr.append(test_error)
     print("%f, %f" % (training_error, test_error))
-
-print("Error rate: %f" % d.test(t))
-
-print("Training random forest")
-r.train(c)
-print("Testing random forest")
-print("Error rate: %f" % r.test(t))
-"""
-
-print("Training AdaBoost")
-a.train(c)
-print("Testing AdaBoost")
-print("Error rate: %f" % a.test(t))

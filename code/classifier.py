@@ -25,12 +25,10 @@ class AdaBoost(Classifier):
         iterations = self.parameters['iterations']
         feature_list = list(range(collection.features))
 	for _ in range(iterations):
-	    print("Training learner: %d" % (_ + 1))
 	    learner = WeakDecisionTree({
 	        'depth' : self.parameters['depth'],
                 'feature_list' : feature_list
 	    })
-            #learner.train(collection)
 	    self.learners.append(learner)
         points = collection.points
         self.distribution = [1.0 / points] * points
@@ -42,11 +40,9 @@ class AdaBoost(Classifier):
             learner.train(data)
             error, correct = self.get_error(learner, data)
 	    a = 1.0/2*np.log((1 - error)/error)
-	    print("Error: %f" % (error))
             self.learners.append(learner)
 	    self.weights.append(a)
 	    sum = 0.0
-	    print(a)
             for i in range(points):
 		if correct[i]:
 	            self.distribution[i] = self.distribution[i]*exp(-a)
@@ -148,7 +144,6 @@ class WeakDecisionTree(DecisionTree):
         DecisionTree.__init__(self, parameters)
 
     def train(self, collection):
-	print("Using parameters:", self.parameters['feature_list'])
 	data = Collection(collection.x[:,self.parameters['feature_list']], collection.y, collection.distribution)
         self.tree = self.generate_tree(data)
         self.trained = True
