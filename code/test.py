@@ -39,10 +39,9 @@ r = RandomForest(parameters={
 })
 
 a = AdaBoost(parameters={
-    'iterations' : 20,
-    'samples' : 1000,
-    'depth' : 0,
-    'features' : 1 
+    'iterations' : 40,
+    'depth' : 5,
+    'num_features' : 5 
 })
 
 print("Loading data")
@@ -62,11 +61,11 @@ t = Collection(test, check)
 print("Training decision tree")
 trerr = []
 teerr = []
-for i in range(1, 201):
+for i in range(1, 2):
     d = RandomForest({
-        'trees' : i,
-        'samples' : 400,
-        'depth' : 30,
+        'trees' : 200,
+        'samples' : 40,
+        'depth' : 3,
         'features' : 5 
     })
     d.train(c)
