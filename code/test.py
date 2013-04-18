@@ -39,9 +39,9 @@ r = RandomForest(parameters={
 })
 
 a = AdaBoost(parameters={
-    'iterations' : 40,
-    'depth' : 5,
-    'num_features' : 5 
+    'iterations' : 20,
+    'depth' : 0,
+    'num_features' : 6 
 })
 
 print("Loading data")

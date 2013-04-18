@@ -21,11 +21,10 @@ class Collection:
 
     def sort(self, feature):
         indices = self.x[:, feature].argsort();
-        return Collection(self.x[indices], self.y[indices])
+        return Collection(self.x[indices], self.y[indices], self.distribution[indices])
 
     def entropy(self):
         num_points = self.points
-	#print(self.distribution, self.y.transpose())
         p = np.average(self.y.transpose()[0], weights=self.distribution)
         q = 1 - p
         if p == 0:
@@ -44,7 +43,7 @@ class Collection:
 	dl = dl / np.sum(dl)
 	dr = self.distribution[index:]
 	dr = dr / np.sum(dr)
-        return (Collection(self.x[:index], self.y[:index], None), Collection(self.x[index:], self.y[index:], None))
+        return (Collection(self.x[:index], self.y[:index], dl), Collection(self.x[index:], self.y[index:], dr))
 
     def empty(self):
         return self.points == 0
