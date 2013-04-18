@@ -2,14 +2,14 @@ from classifier import *
 from scipy.io import loadmat
 
 d = DecisionTree({
-    'depth' : 7,
+    'depth' : 9,
 })
 
 r = RandomForest(parameters={
-    'trees' : 200,
-    'samples' : 400,
-    'depth' : 30,
-    'features' : 5 
+    'trees' : 100,
+    'samples' : 800,
+    'depth' : 5,
+    'features' : 10 
 })
 
 a = AdaBoost(parameters={
@@ -38,4 +38,4 @@ benchmark(d)
 print("Training Random Forest")
 benchmark(r)
 print("Training AdaBoost")
-benchmark(r)
+benchmark(a)

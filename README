@@ -1,0 +1,13 @@
+To run the code, which was written using numpy and scipy, run
+
+$ python code/benchmark.py
+
+The benchmark file will test the Decision Tree, Random Forest, and AdaBoost and return the appropriate training/test error rates.
+
+The majority of the code is in:
+
+collection.py (an abstraction on the data that allows for easy partitioning, sorting, and splitting)
+tree.py (the decision tree node/leaf abstraction)
+classifier.py (the main code for the 3 classifiers, which rely on each other heavily)
+
+
