@@ -1,11 +1,12 @@
-function fTree = calculateSplit(fTree, xTree, yTree, n, beta)
+function fTree = calculateSplit(fTree, xTree, yTree, n, beta, numThreshPerFeat, deep)
 
-n
-
-numThreshPerFeat = 5;
 minNodeSize = 5;
-if n<3
-  depth = 1;
+if deep
+  if n<4
+    depth = 1;
+  else
+    depth = 0;
+  end
 else
   depth = 0;
 end
@@ -26,7 +27,9 @@ for i=1:size(x,2)
   end
   threshes = threshes(1:threshSpace:end);
   threshes = unique(threshes);
-  threshes = [0];
+  if depth > 0
+    threshes = [0]
+  end
   for j=1:size(threshes,1)
     thresh = threshes(j);
     [h, xGr, yGr, xLe, yLe] = entropyUsingSplit(x, y, i, thresh, depth, numThreshPerFeat);
@@ -41,10 +44,6 @@ for i=1:size(x,2)
     end
   end
 end
-minH
-size(x,2)
-[z, a, b, c, d] = entropyUsingSplit(x, y, bestF, bestThresh, 0, numThreshPerFeat);
-z
 
 
 if origH > minH && origH - minH > beta && size(x,1) > minNodeSize 
@@ -54,13 +53,13 @@ if origH > minH && origH - minH > beta && size(x,1) > minNodeSize
   fTree(n,5) = grN;
   xTree{grN} = bestXGr;
   yTree{grN} = bestYGr;
-  [fTree] = calculateSplit(fTree, xTree, yTree, grN, beta);
+  [fTree] = calculateSplit(fTree, xTree, yTree, grN, beta, numThreshPerFeat, deep);
 
   leN = size(fTree, 1) + 1;
   xTree{leN} = bestXLe;
   yTree{leN} = bestYLe;
   fTree(n,6) = leN;
-  [fTree] = calculateSplit(fTree, xTree, yTree, leN, beta);
+  [fTree] = calculateSplit(fTree, xTree, yTree, leN, beta, numThreshPerFeat, deep);
 else
   num1 = sum(y);
   num0 = size(y, 1) - num1;
