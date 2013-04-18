@@ -18,11 +18,11 @@ trerr = [0.08254486133768357, 0.05220228384991843, 0.05057096247960846, 0.050244
 teerr = [0.08854166666666663, 0.06640625, 0.06575520833333337, 0.05794270833333337, 0.06315104166666663, 0.05859375, 0.0625, 0.06510416666666663, 0.0625, 0.06315104166666663]
 """
 
-trerr = []
-teerr = []
-training = plt.plot([1, 10, 50, 100], trerr, label="Training")
-test = plt.plot([1, 10, 50, 100], teerr, label="Test")
+trerr = [0.132790, 0.1124, 0.10014, 0.09576, 0.09233, 0.08912, 0.08514, 0.082871]
+teerr = [0.141276, 0.1314, 0.12213, 0.11413, 0.10764, 0.095634, 0.090143, 0.085286]
+training = plt.plot([1, 4, 6, 8, 10,12, 15, 20], trerr, label="Training")
+test = plt.plot([1, 4, 6, 8, 10,12, 15, 20], teerr, label="Test")
 plt.ylabel("Error")
-plt.xlabel("Number of Features")
+plt.xlabel("Number of Iterations")
 plt.legend()
 plt.show()
