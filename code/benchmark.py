@@ -34,8 +34,8 @@ def benchmark(classifier):
     print("Testing Error rate: %f" % classifier.test(t))
 
 print("Training Decision Tree")
-#benchmark(d)
+benchmark(d)
 print("Training Random Forest")
 benchmark(r)
 print("Training AdaBoost")
-#benchmark(a)
+benchmark(a)
