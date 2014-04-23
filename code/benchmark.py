@@ -1,4 +1,4 @@
-from classifier import * 
+from classifier import *
 from scipy.io import loadmat
 
 d = DecisionTree({
@@ -6,10 +6,10 @@ d = DecisionTree({
 })
 
 r = RandomForest(parameters={
-    'trees' : 100,
+    'trees' : 10,
     'samples' : 800,
     'depth' : 5,
-    'features' : 10 
+    'features' : 4
 })
 
 a = AdaBoost(parameters={
@@ -19,12 +19,13 @@ a = AdaBoost(parameters={
 
 print("Loading data")
 data = loadmat('spamData.mat')
-x = data['Xtrain']
-y = data['ytrain']
+train, test = loadmat('train.mat'), loadmat('test.mat')
+x = np.array(train['Xtrain'][:, 0:100].todense())
+y = train['ytrain']
 c = Collection(x, y)
 
-xtest = data['Xtest']
-ytest = data['ytest']
+xtest = np.array(test['Xtest'][:, 0:100].todense())
+ytest = test['ytest']
 
 t = Collection(xtest, ytest)
 
@@ -34,8 +35,8 @@ def benchmark(classifier):
     print("Testing Error rate: %f" % classifier.test(t))
 
 print("Training Decision Tree")
-benchmark(d)
+#benchmark(d)
 print("Training Random Forest")
 benchmark(r)
 print("Training AdaBoost")
-benchmark(a)
+#benchmark(a)

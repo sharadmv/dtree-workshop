@@ -7,9 +7,9 @@ class Collection:
         assert x.shape[0] == y.shape[0], "Mismatching x/y dimensions"
         self.x = x
         self.y = y
-	if distribution == None:
-	    distribution = [] if self.points == 0 else [1.0/self.points]*self.points
-	self.distribution = np.array(distribution)
+        if distribution == None:
+            distribution = [] if self.points == 0 else [1.0/self.points]*self.points
+        self.distribution = np.array(distribution)
 
     @property
     def points(self):
@@ -40,9 +40,9 @@ class Collection:
 
     def partition(self, index):
         dl = self.distribution[:index]
-	dl = dl / np.sum(dl)
-	dr = self.distribution[index:]
-	dr = dr / np.sum(dr)
+        dl = dl / np.sum(dl)
+        dr = self.distribution[index:]
+        dr = dr / np.sum(dr)
         return (Collection(self.x[:index], self.y[:index], dl), Collection(self.x[index:], self.y[index:], dr))
 
     def empty(self):
@@ -56,28 +56,28 @@ class Collection:
         information = self.impurity()
         best = float('-inf')
         split, question = None, None
-	if features != None:
-	    available = list(range(self.features))
-	    np.random.shuffle(available)
-	    available = set(available[:features])
+        if features != None:
+            available = list(range(self.features))
+            np.random.shuffle(available)
+            available = set(available[:features])
         for i in range(self.features):
             sorted_collection = self.sort(i)
-	    if features != None and i not in available:
+            if features != None and i not in available:
                 continue
-	    unique = np.unique(sorted_collection.x[:, i])
-	    current, counter = 0, 0
+            unique = np.unique(sorted_collection.x[:, i])
+            current, counter = 0, 0
             while current < unique.shape[0]:
-            	num = unique[current]
+                num = unique[current]
                 while counter < sorted_collection.points and sorted_collection.x[counter, i] == num:
-		    counter+=1
-                left, right = sorted_collection.partition(counter)  
+                    counter+=1
+                left, right = sorted_collection.partition(counter)
                 p = (left.points + 0.0)/self.points
                 gain = information - p*left.impurity() - (1 - p)*right.impurity()
                 if gain >= best:
                     best = gain
                     split = (left, right)
                     question = Question(i, num)
- 		current += 1
+                current += 1
         return split, question, best
 
     def impurity(self):
@@ -87,4 +87,4 @@ class Collection:
 
     def vote(self):
         p = (np.sum(self.y)+0.0)/self.points
-	return round(p), p
+        return round(p), p
